@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import '../widgets/doctor_header_widget.dart';
-import '../widgets/doctor_profile_widget.dart';
-import '../widgets/doctor_appointment_widget.dart';
-import '../widgets/doctor_timing_widget.dart';
-import '../widgets/doctor_location_widget.dart';
-import '../widgets/doctor_tab_bar_widget.dart';
-import '../models/doctor.dart';
-import 'doctor_details_controller.dart';
+import '../../domain/models/doctor.dart';
+import '../../widgets/doctor_appointment_widget.dart';
+import '../../widgets/doctor_header_widget.dart';
+import '../../widgets/doctor_location_widget.dart';
+import '../../widgets/doctor_profile_widget.dart';
+import '../../widgets/doctor_tab_bar_widget.dart';
+import '../../widgets/doctor_timing_widget.dart';
+import '../controllers/doctor_details_controller.dart';
 
 class DoctorDetailsScreen extends StatelessWidget {
   final Doctor doctor;

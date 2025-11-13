@@ -1,31 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../widgets/header_widget.dart';
-import '../widgets/search_widget.dart';
-import '../widgets/specialities_widget.dart';
-import '../widgets/specialists_widget.dart';
-import '../widgets/featured_services_widget.dart';
-import '../widgets/medicines_widget.dart';
-import '../widgets/most_decorated_doctors_widget.dart';
-import '../widgets/most_decorated_specialities.dart';
-import '../widgets/quick_actions_widget.dart';
-import 'home_controller.dart';
+import '../../data/api_service.dart';
+import '../../domain/usecases/get_home_data_usecase.dart';
+import '../controllers/home_controller.dart';
+import '../../widgets/header_widget.dart';
+import '../../widgets/search_widget.dart';
+import '../../widgets/quick_actions_widget.dart';
+import '../../widgets/specialities_widget.dart';
+import '../../widgets/specialists_widget.dart';
+import '../../widgets/medicines_widget.dart';
+import '../../widgets/featured_services_widget.dart';
+import '../../widgets/most_decorated_doctors_widget.dart';
+import '../../widgets/most_decorated_specialities.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
-  // se instanțiază controller-ul
-  final HomeController controller = Get.put(HomeController());
+
+  // Inițializează API și usecase
+  final apiService = ApiService(baseUrl: 'https://test-api-jlbn.onrender.com/v5');
+  late final getHomeDataUseCase = GetHomeDataUseCase(apiService);
 
   @override
   Widget build(BuildContext context) {
+    // Trebuie să pasezi usecase-ul la controller
+    final controller = Get.put(HomeController(getHomeDataUseCase: getHomeDataUseCase));
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Obx(() {
-          // se așteaptă încărcarea JSON-ului
           if (controller.isLoading.value) {
             return const Center(child: CircularProgressIndicator());
           }
+
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -37,7 +44,7 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(height: 10),
                   const QuickActionsWidget(),
                   const SizedBox(height: 25),
-                  // datele JSON sunt deja obiecte Dart și sunt trimite către widgeturi pentru afișare
+
                   SpecialitiesWidget(specialities: controller.specialities),
                   const SizedBox(height: 30),
                   SpecialistsWidget(doctors: controller.doctors),

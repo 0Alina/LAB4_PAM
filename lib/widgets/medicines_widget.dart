@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/medicine.dart';
+import '../domain/models/medicine.dart';
 
 class MedicinesWidget extends StatefulWidget {
   final List<Medicine> medicines;
@@ -34,8 +34,8 @@ class _MedicinesWidgetState extends State<MedicinesWidget> {
               children: [
                 ClipRRect(
                   borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                  child: Image.asset(
-                    medicine.imagePath,
+                  child: Image.network(
+                    medicine.image,
                     height: 180,
                     width: double.infinity,
                     fit: BoxFit.cover,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/featured_service.dart';
+import '../domain/models/featured_service.dart';
 
 class FeaturedServicesWidget extends StatelessWidget {
   final List<FeaturedService> services;
@@ -10,11 +10,12 @@ class FeaturedServicesWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 7),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
-        child: Image.asset(
-          service.imagePath,
+        child: Image.network(
+          service.image,
           height: 220,
           width: 180,
           fit: BoxFit.cover,
+          errorBuilder: (c, e, s) => Container(color: Colors.grey, child: const Icon(Icons.image)),
         ),
       ),
     );

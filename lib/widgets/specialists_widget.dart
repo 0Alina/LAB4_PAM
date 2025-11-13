@@ -1,101 +1,64 @@
 import 'package:flutter/material.dart';
-import '../models/doctor.dart';
-import '../screens/doctor_details_screen.dart';
+import '../domain/models/doctor.dart';
+import '../presentation/screens/doctor_details_screen.dart';
 
-class SpecialistsWidget extends StatefulWidget {
+class SpecialistsWidget extends StatelessWidget {
   final List<Doctor> doctors;
   const SpecialistsWidget({super.key, required this.doctors});
 
-  @override
-  State<SpecialistsWidget> createState() => _SpecialistsWidgetState();
-}
-
-class _SpecialistsWidgetState extends State<SpecialistsWidget> {
-  late List<bool> _favorites;
-
-  @override
-  void initState() {
-    super.initState();
-    _favorites = List<bool>.filled(widget.doctors.length, false);
-  }
-
-  Widget _buildDoctorCard(Doctor doctor, int index) {
+  Widget _buildDoctorCard(BuildContext context, Doctor doctor) {
     return Padding(
-      padding: EdgeInsets.only(left: index == 0 ? 9 : 7, right: 7),
-      child: Stack(
-        children: [
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => DoctorDetailsScreen(doctor: doctor),
+      padding: const EdgeInsets.symmetric(horizontal: 7),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => DoctorDetailsScreen(doctor: doctor)),
+          );
+        },
+        child: Container(
+          width: 200,
+          decoration: BoxDecoration(
+            color: Colors.grey.shade100,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                child: Image.network(
+                  doctor.image,
+                  height: 180,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  errorBuilder: (c, e, s) => Container(color: Colors.grey.shade300, height: 180, child: const Icon(Icons.person)),
                 ),
-              );
-            },
-            child: Container(
-              width: 200,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(16),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ClipRRect(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                    child: Image.asset(
-                      doctor.imagePath,
-                      height: 180,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(doctor.speciality, style: const TextStyle(fontSize: 13, color: Colors.grey)),
+                    const SizedBox(height: 2),
+                    Text(doctor.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black87)),
+                    const SizedBox(height: 8),
+                    Row(
                       children: [
-                        Text(doctor.specialization, style: const TextStyle(fontSize: 13, color: Colors.grey)),
-                        const SizedBox(height: 2),
-                        Text(doctor.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black87)),
-                        const SizedBox(height: 8),
-                        Divider(color: Colors.grey.shade300, thickness: 1),
-                        const SizedBox(height: 4),
-                        Text(doctor.price, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black)),
+                        Icon(Icons.star, size: 16, color: Colors.amber),
+                        const SizedBox(width: 4),
+                        Text(doctor.rating.toString(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                       ],
                     ),
-                  ),
-                  const SizedBox(height: 12),
-                ],
-              ),
-            ),
-          ),
-          Positioned(
-            top: 12,
-            left: 12,
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  _favorites[index] = !_favorites[index];
-                });
-              },
-              child: Container(
-                width: 36,
-                height: 36,
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.9),
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(color: Colors.black.withOpacity(0.15), blurRadius: 4, offset: const Offset(0, 2))
                   ],
                 ),
-                child: Icon(_favorites[index] ? Icons.favorite : Icons.favorite_border, color: _favorites[index] ? Colors.redAccent : Colors.grey),
               ),
-            ),
+              const SizedBox(height: 12),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -117,7 +80,7 @@ class _SpecialistsWidgetState extends State<SpecialistsWidget> {
           scrollDirection: Axis.horizontal,
           physics: const BouncingScrollPhysics(),
           child: Row(
-            children: List.generate(widget.doctors.length, (index) => _buildDoctorCard(widget.doctors[index], index)),
+            children: doctors.map((doctor) => _buildDoctorCard(context, doctor)).toList(),
           ),
         ),
       ],

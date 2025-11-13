@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../screens/doctor_details_controller.dart';
+import '../presentation/controllers/doctor_details_controller.dart';
+
 
 class DoctorLocationWidget extends StatelessWidget {
   const DoctorLocationWidget({super.key});

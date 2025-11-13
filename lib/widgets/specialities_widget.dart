@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import '../models/speciality.dart';
+import '../domain/models/speciality.dart';
 
 class SpecialitiesWidget extends StatelessWidget {
-  // lista citită din JSON de controller
   final List<Speciality> specialities;
   const SpecialitiesWidget({super.key, required this.specialities});
 
@@ -15,10 +14,20 @@ class SpecialitiesWidget extends StatelessWidget {
           CircleAvatar(
             backgroundColor: Colors.teal.shade50,
             radius: 30,
-            child: Image.asset(speciality.iconPath, width: 30, height: 30, fit: BoxFit.contain),
+            child: Image.network(
+              speciality.icon,
+              width: 30,
+              height: 30,
+              fit: BoxFit.contain,
+              errorBuilder: (c, e, s) => const Icon(Icons.image),
+            ),
           ),
           const SizedBox(height: 4),
-          Text(speciality.title, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600), textAlign: TextAlign.center),
+          Text(
+            speciality.name,
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+            textAlign: TextAlign.center,
+          ),
         ],
       ),
     );
@@ -35,7 +44,6 @@ class SpecialitiesWidget extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           physics: const BouncingScrollPhysics(),
           child: Row(
-            // parcurge lista și afișează fiecare specialitate
             children: specialities.map((s) => Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4.0),
               child: _buildSpeciality(s),
