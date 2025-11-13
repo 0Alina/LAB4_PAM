@@ -8,7 +8,6 @@ import '../../widgets/search_widget.dart';
 import '../../widgets/quick_actions_widget.dart';
 import '../../widgets/specialities_widget.dart';
 import '../../widgets/specialists_widget.dart';
-import '../../widgets/medicines_widget.dart';
 import '../../widgets/featured_services_widget.dart';
 import '../../widgets/most_decorated_doctors_widget.dart';
 import '../../widgets/most_decorated_specialities.dart';
@@ -44,12 +43,9 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(height: 10),
                   const QuickActionsWidget(),
                   const SizedBox(height: 25),
-
                   SpecialitiesWidget(specialities: controller.specialities),
                   const SizedBox(height: 30),
                   SpecialistsWidget(doctors: controller.doctors),
-                  const SizedBox(height: 30),
-                  MedicinesWidget(medicines: controller.medicines),
                   const SizedBox(height: 30),
                   FeaturedServicesWidget(services: controller.featuredServices),
                   const SizedBox(height: 30),

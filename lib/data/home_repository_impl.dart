@@ -1,7 +1,6 @@
 import '../domain/models/doctor.dart';
 import '../domain/models/speciality.dart';
 import '../domain/models/featured_service.dart';
-import '../domain/models/medicine.dart';
 import 'api_service.dart';
 
 class HomeRepositoryImpl {
@@ -25,11 +24,5 @@ class HomeRepositoryImpl {
     final data = await apiService.fetchHomeData();
     final actionsJson = data['actions'] as List;
     return actionsJson.map((json) => FeaturedService.fromJsonApi(json)).toList();
-  }
-
-  Future<List<Medicine>> fetchMedicines() async {
-    final data = await apiService.fetchHomeData();
-    final medicinesJson = data['medicines'] as List? ?? [];
-    return medicinesJson.map((json) => Medicine.fromJsonApi(json)).toList();
   }
 }

@@ -3,7 +3,6 @@ import '../../domain/usecases/get_home_data_usecase.dart';
 import '../../domain/models/doctor.dart';
 import '../../domain/models/speciality.dart';
 import '../../domain/models/featured_service.dart';
-import '../../domain/models/medicine.dart';
 
 class HomeController extends GetxController {
   final GetHomeDataUseCase getHomeDataUseCase;
@@ -13,7 +12,6 @@ class HomeController extends GetxController {
   var doctors = <Doctor>[].obs;
   var specialities = <Speciality>[].obs;
   var featuredServices = <FeaturedService>[].obs;
-  var medicines = <Medicine>[].obs;
   var isLoading = true.obs;
 
   @override
@@ -38,9 +36,6 @@ class HomeController extends GetxController {
           .map((f) => FeaturedService.fromJsonApi(f))
           .toList();
 
-      medicines.value = (data['medicines'] as List? ?? [])
-          .map((m) => Medicine.fromJsonApi(m))
-          .toList();
     } catch (e) {
       print('Error loading home data: $e');
     } finally {
