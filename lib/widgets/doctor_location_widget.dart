@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../presentation/controllers/doctor_details_controller.dart';
 
-
 class DoctorLocationWidget extends StatelessWidget {
   const DoctorLocationWidget({super.key});
+  final double cardWidth = 160.0;
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<DoctorDetailsController>();
-    const cardWidth = 160.0;
 
     return Obx(() {
       if (controller.locations.isEmpty) {
@@ -18,17 +17,10 @@ class DoctorLocationWidget extends StatelessWidget {
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
         children: [
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Text(
-              'Location',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-            ),
+            child: Text('Location', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
           ),
           const SizedBox(height: 8),
           SizedBox(
@@ -39,7 +31,7 @@ class DoctorLocationWidget extends StatelessWidget {
               itemCount: controller.locations.length,
               separatorBuilder: (_, __) => const SizedBox(width: 12),
               itemBuilder: (context, index) {
-                final location = controller.locations[index];
+                final loc = controller.locations[index];
                 return Container(
                   width: cardWidth,
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
@@ -53,22 +45,15 @@ class DoctorLocationWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        location['name']!,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 13,
-                          color: Colors.black87,
-                        ),
+                        loc['area'] ?? '',
+                        style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        location['detail']!,
-                        style: const TextStyle(
-                          fontSize: 11,
-                          color: Colors.grey,
-                        ),
+                        loc['hospital'] ?? '',
+                        style: const TextStyle(fontSize: 11, color: Colors.grey),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),

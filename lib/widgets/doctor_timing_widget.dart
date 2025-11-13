@@ -18,15 +18,8 @@ class DoctorTimingWidget extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              'Timing',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
-            ),
+            const Text('Timing', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
             const SizedBox(height: 12),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
@@ -42,25 +35,11 @@ class DoctorTimingWidget extends StatelessWidget {
                       color: Colors.white,
                     ),
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          day['day']!,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 13,
-                            color: Colors.black87,
-                          ),
-                        ),
+                        Text(day['day'] ?? '', style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13)),
                         const SizedBox(height: 2),
-                        Text(
-                          day['time']!,
-                          style: const TextStyle(
-                            fontSize: 11,
-                            color: Colors.grey,
-                          ),
-                        ),
+                        Text(day['time'] ?? '', style: const TextStyle(fontSize: 11, color: Colors.grey)),
                       ],
                     ),
                   );

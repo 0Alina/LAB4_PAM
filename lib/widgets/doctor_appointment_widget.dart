@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../presentation/controllers/doctor_details_controller.dart';
 
-
 class DoctorAppointmentWidget extends StatefulWidget {
   const DoctorAppointmentWidget({super.key});
 
   @override
-  State<DoctorAppointmentWidget> createState() =>
-      _DoctorAppointmentWidgetState();
+  State<DoctorAppointmentWidget> createState() => _DoctorAppointmentWidgetState();
 }
 
 class _DoctorAppointmentWidgetState extends State<DoctorAppointmentWidget> {
@@ -27,13 +25,21 @@ class _DoctorAppointmentWidgetState extends State<DoctorAppointmentWidget> {
         return const Center(child: CircularProgressIndicator());
       }
 
-      final days = List<Map<String, dynamic>>.from(controller.appointment['days']);
-      final slots = List<String>.from(controller.appointment['slots']);
-      final price = controller.appointment['price'];
-      final clinicName = controller.appointment['clinicName'];
-      final clinicLocation = controller.appointment['clinicLocation'];
-      final additionalClinics = controller.appointment['additionalClinics'];
-      final waitTime = controller.appointment['waitTime'];
+      final availableDays = List<Map<String, dynamic>>.from(controller.appointment['available_days']);
+      final hospital = controller.appointment['hospital'] ?? {};
+      final clinicName = hospital['name'] ?? '';
+      final clinicLocation = hospital['location'] ?? '';
+      final additionalClinics = (hospital['more_clinics'] as List?)
+          ?.map((c) => c['name'])
+          .join(', ') ??
+          '';
+      final waitTime = hospital['wait_time'] ?? '';
+      final price = controller.appointment['fee'] ?? '';
+      final appointmentType = controller.appointment['type'] ?? '';
+
+      final slots = availableDays.isNotEmpty && selectedDayIndex < availableDays.length
+          ? List<String>.from(availableDays[selectedDayIndex]['slots'] ?? [])
+          : [];
 
       return Container(
         margin: const EdgeInsets.symmetric(horizontal: 8),
@@ -54,20 +60,13 @@ class _DoctorAppointmentWidgetState extends State<DoctorAppointmentWidget> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'In-Clinic Appointment',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
-                    ),
+                  Text(
+                    appointmentType,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                   ),
                   Text(
                     price,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
-                      color: darkGreen,
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: darkGreen),
                   ),
                 ],
               ),
@@ -85,10 +84,7 @@ class _DoctorAppointmentWidgetState extends State<DoctorAppointmentWidget> {
                       children: [
                         Text(
                           clinicName,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                          ),
+                          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                         ),
                         const SizedBox(height: 2),
                         Text(
@@ -102,14 +98,15 @@ class _DoctorAppointmentWidgetState extends State<DoctorAppointmentWidget> {
                       ],
                     ),
                   ),
-                  Text(
-                    additionalClinics,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: Colors.blue,
-                      decoration: TextDecoration.underline,
+                  if (additionalClinics.isNotEmpty)
+                    Text(
+                      additionalClinics,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: Colors.blue,
+                        decoration: TextDecoration.underline,
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),
@@ -119,10 +116,7 @@ class _DoctorAppointmentWidgetState extends State<DoctorAppointmentWidget> {
             // Wait time
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Text(
-                waitTime,
-                style: TextStyle(fontSize: 11, color: Colors.grey.shade500),
-              ),
+              child: Text(waitTime, style: TextStyle(fontSize: 11, color: Colors.grey.shade500)),
             ),
 
             Divider(color: Colors.grey.shade300, thickness: 1),
@@ -131,72 +125,37 @@ class _DoctorAppointmentWidgetState extends State<DoctorAppointmentWidget> {
             // Days horizontal list
             SizedBox(
               height: 50,
-              child: Stack(
-                children: [
-                  Positioned(
-                    bottom: 10,
-                    left: 16,
-                    right: 16,
-                    child: Container(height: 3, color: lightGreen),
-                  ),
-                  ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: days.length,
-                    separatorBuilder: (_, __) => const SizedBox(width: 24),
-                    itemBuilder: (context, index) {
-                      final day = days[index];
-                      bool isSelected = selectedDayIndex == index;
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: availableDays.length,
+                separatorBuilder: (_, __) => const SizedBox(width: 24),
+                itemBuilder: (context, index) {
+                  final day = availableDays[index];
+                  bool isSelected = selectedDayIndex == index;
 
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            selectedDayIndex = index;
-                            selectedSlotIndex = -1;
-                          });
-                        },
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  day['day']!,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  day['slots']!,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 12,
-                                    color: day['slots']!.toLowerCase().contains('no slot')
-                                        ? Colors.grey.shade700
-                                        : Colors.blue,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 6),
-                            Container(
-                              height: 3,
-                              width: isSelected
-                                  ? day['day']!.length * 8.0 + day['slots']!.length * 6.0
-                                  : 0,
-                              color: darkGreen,
-                            ),
-                          ],
-                        ),
-                      );
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedDayIndex = index;
+                        selectedSlotIndex = -1;
+                      });
                     },
-                  ),
-                ],
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(day['day'] ?? '', style: const TextStyle(fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 6),
+                        Container(
+                          height: 3,
+                          width: isSelected ? 50 : 0,
+                          color: darkGreen,
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
 
@@ -230,11 +189,7 @@ class _DoctorAppointmentWidgetState extends State<DoctorAppointmentWidget> {
                       ),
                       child: Text(
                         slots[index],
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: darkGreen,
-                        ),
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: darkGreen),
                       ),
                     ),
                   );

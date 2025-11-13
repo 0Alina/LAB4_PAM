@@ -12,15 +12,29 @@ class DoctorDetailsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    final apiService = ApiService(baseUrl: 'https://test-api-jlbn.onrender.com');
+    final apiService = ApiService(baseUrl: 'https://test-api-jlbn.onrender.com/v5');
     getDoctorDetailsUseCase = GetDoctorDetailsUseCase(apiService);
     loadDoctorDetails();
   }
 
   Future<void> loadDoctorDetails() async {
     final data = await getDoctorDetailsUseCase.execute();
-    appointment.value = data['appointment'] ?? {};
+
+    // Appointment
+    final appointmentData = data['appointment'] ?? {};
+    final hospital = appointmentData['hospital'] ?? {};
+
+    appointment.value = {
+      'type': appointmentData['type'] ?? '',
+      'fee': "${appointmentData['currency'] ?? ''} ${appointmentData['fee'] ?? ''}",
+      'hospital': hospital,
+      'available_days': appointmentData['available_days'] ?? [],
+    };
+
+    // Timing
     timing.value = data['timing'] ?? [];
+
+    // Locations
     locations.value = data['locations'] ?? [];
   }
 }
